@@ -1,0 +1,31 @@
+<?php 
+session_start(); 
+if(isset($_SESSION['username']))
+{
+	$conn = mysqli_connect('localhost','olechka','QWa!1234','dz');
+	if(!$conn)
+		die("conn err, ".mysqli_connect_error());
+	mysqli_query($conn, "SELECT * FROM `9sem`");
+	
+	$id_anime = $_POST["id_anime"];
+	$username = $_POST["username"];
+	$text = $_POST["text"];
+	$score = $_POST["score"];
+	if(($text != "") || ($score != "-"))
+	{
+		$query = "INSERT INTO anime_comments(id_anime, username, text, score) 
+		VALUES(\"".$id_anime."\",\"".$username."\",\"".$text."\", \"".$score."\")";
+		mysqli_query($conn, $query);
+	}
+	mysqli_close($conn);
+	$page = $_SERVER['HTTP_REFERER'];
+	header("Location:$page");
+}
+else
+{
+	$page = $_SERVER['HTTP_REFERER'];
+	header("Refresh:2; url=$page");
+	echo "Yout don't have administrator rights!";
+}
+
+?>
